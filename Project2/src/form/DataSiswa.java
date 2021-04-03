@@ -205,6 +205,9 @@ public class DataSiswa extends javax.swing.JFrame {
 
     private void cmdEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditActionPerformed
         // TODO add your handling code here:
+        String nis = tbl_siswa.getValueAt(baris, 1).toString();
+        ManageData tambahData = new ManageData(this, true, "Edit", nis);
+        tambahData.setVisible(true);
     }//GEN-LAST:event_cmdEditActionPerformed
 
     /**
