@@ -109,6 +109,11 @@ public class DataSiswa extends javax.swing.JFrame {
         });
 
         cmdEdit.setText("Ubah");
+        cmdEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdEditActionPerformed(evt);
+            }
+        });
 
         cmdHapus.setText("Hapus");
         cmdHapus.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -197,6 +202,10 @@ public class DataSiswa extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_cmdHapusActionPerformed
+
+    private void cmdEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdEditActionPerformed
 
     /**
      * @param args the command line arguments

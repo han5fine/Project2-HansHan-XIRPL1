@@ -7,6 +7,7 @@ package form;
 
 import classes.DatabaseConnection;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
@@ -15,20 +16,74 @@ import javax.swing.JOptionPane;
  *
  * @author SAMSUNG
  */
-public class ManageData extends javax.swing.JFrame {
+public class ManageData extends javax.swing.JDialog {
 
     /**
      * Creates new form ManageData
      */
     Connection koneksi;
-    public ManageData() {
+    String action;
+    public ManageData(java.awt.Frame parent, boolean modal, String act, String nis) {
+        super(parent, modal);
         initComponents();
-        koneksi = DatabaseConnection.getKoneksi("localhost","3306","root","","db_sekolah");
+        koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db_sekolah");
+        
+        action = act;
+        if (action.equals("Edit")){
+	txtNIS.setEnabled(false);
+	showData(nis);
+}
     }
 
+    
+    void showData(String nis){
+	try{
+		Statement stmt = koneksi.createStatement();
+		String query = "SELECT * FROM t_siswa WHERE nis = '"+nis+"'";
+		ResultSet rs = stmt.executeQuery(query);
+		rs.first();
+		txtNIS.setText(rs.getString("nis"));
+		txtNama.setText(rs.getString("nama"));
+		cmbKelas.setSelectedItem(rs.getString("kelas"));
+		cmbJurusan.setSelectedItem(rs.getString("jurusan"));
+ 
+	} catch (SQLException ex){
+		ex.printStackTrace();
+		JOptionPane.showMessageDialog(null, "Terjadi Kesalahan Query");
+	}
+}
+    public void EditData(){
+	String nis  = txtNIS.getText();
+	String nama  = txtNama.getText();
+	String kelas  =cmbKelas.getSelectedItem().toString();
+	String jurusan  = cmbJurusan.getSelectedItem().toString();
+	
+	try{
+		Statement stmt = koneksi.createStatement();
+		String query = "UPDATE t_siswa SET nama = '"+nama+"',"
+		+ "kelas='"+kelas+"',"
+		+ "jurusan='"+jurusan+"' WHERE nis = '"+nis+"'";
+		
+		System.out.println(query);
+		int berhasil = stmt.executeUpdate(query);
+		if (berhasil == 1){
+			JOptionPane.showMessageDialog(null, "Data Berhasil Diubah");
+		} else{
+			JOptionPane.showMessageDialog(null, "Data Berhasil Diubah");
+		}
+	} catch (SQLException ex){
+		ex.printStackTrace();
+		JOptionPane.showMessageDialog(null, "Terjadi Kesalahan pada Query");
+        }
+    }
     ManageData(DataSiswa aThis, boolean b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    private ManageData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
     public void SimpanData(){
         String nis  = txtNIS.getText();
@@ -177,7 +232,9 @@ public class ManageData extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:\
-        SimpanData();
+        if(action.equals("Edit")) EditData();
+        else SimpanData();
+        
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     /**
@@ -207,12 +264,7 @@ public class ManageData extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ManageData().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
